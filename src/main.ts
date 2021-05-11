@@ -1,0 +1,90 @@
+import * as core from '@actions/core'
+import * as github from '@actions/github'
+import {getTagFromRef} from './getTagFromRef'
+import {readFileSync} from 'fs'
+
+const owner = github.context.repo.owner
+const repo = github.context.repo.repo
+
+async function run(): Promise<void> {
+  try {
+    core.info('Parsing the ref')
+    const ref: string = core.getInput('ref')
+    let tag
+    try {
+      tag = getTagFromRef(ref)
+    } catch (e) {
+      core.info('Skipping publish')
+      return
+    }
+    core.info(`Tag is: ${tag}`)
+    core.info('Setting up Octokit')
+    const token: string = core.getInput('token')
+    const octokit = github.getOctokit(token)
+
+    core.info(`Searching release by tag: ${tag}`)
+    let dat1
+    try {
+      dat1 = await octokit.rest.repos.getReleaseByTag({owner, repo, tag})
+    } catch (ignore) {
+      // no release found is a good thing
+    }
+    core.debug(dat1)
+
+    if (dat1 !== undefined) {
+      const replace: string = core.getInput('replace')
+      if (replace === 'true' || replace === tag) {
+        core.info('Deleting release')
+        const {data: resp} = await octokit.rest.repos.deleteRelease({
+          owner,
+          repo,
+          release_id: dat1.data.id
+        })
+        core.debug(resp)
+      } else {
+        throw new Error(
+          'Set replace to true or a tag name if you want me to replace an existing release.'
+        )
+      }
+    }
+
+    core.info('Creating the new release as draft')
+    const {data: rel2} = await octokit.rest.repos.createRelease({
+      owner,
+      repo,
+      tag_name: tag,
+      name: tag,
+      draft: true
+    })
+    core.debug(rel2)
+
+    const argFiles: string = core.getInput('files')
+    const files: string[] = argFiles.split('\n').filter(l => l.trim() !== '')
+    core.info('Uploading files')
+    for (const file of files) {
+      core.info(`Uploading ${file}`)
+      const {data: resp} = await octokit.repos.uploadReleaseAsset({
+        owner,
+        repo,
+        release_id: rel2.id,
+        url: rel2.upload_url,
+        data: readFileSync(file, 'utf8'),
+        name: file
+      })
+      core.debug(JSON.stringify(resp))
+    }
+
+    core.info('Publishing the new release')
+    const {data: rel3} = await octokit.rest.repos.updateRelease({
+      owner,
+      repo,
+      release_id: rel2.id,
+      draft: false
+    })
+    core.debug(rel3)
+  } catch (error) {
+    core.setFailed(error.message)
+  }
+}
+
+run()

@@ -1,0 +1,26 @@
+name: 'pubrel'
+description: 'Publish a release and upload assets'
+author: 'Chris Burkert (https://github.com/cb80)'
+inputs:
+  ref:
+    description: 'GitHub ref, default: github.ref'
+    required: false
+    default: ${{ github.ref }}
+  token:
+    description: 'GitHub token, default: secrets.GITHUB_TOKEN'
+    required: false
+    default: ${{ github.token }}
+  replace:
+    description: 'Replace any existing release, default: false'
+    required: false
+    default: 'false'
+  files:
+    description: 'List of files to be uploaded as asset, default: none'
+    required: false
+    default: ''
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'box'  
+  color: 'blue'
