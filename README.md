@@ -7,7 +7,7 @@ replaced if you wish (delete & recreate). It supports GitHub Enterprise.
 
 # Examples
 ```
-uses: cb80/pubrel@latest
+uses: cb80/pubrel@v0.1.0
 with:
   files: |
     app.exe
@@ -16,7 +16,7 @@ with:
 
 Use a different token:
 ```
-uses: cb80/pubrel@latest
+uses: cb80/pubrel@v0.1.0
 with:
   token: ${{ secrets.MY_TOKEN }}
   files: |
@@ -26,7 +26,7 @@ with:
 
 Replace the `latest` release but not for other tags:
 ```
-uses: cb80/pubrel@latest
+uses: cb80/pubrel@v0.1.0
 with:
   replace: latest
   files: |
@@ -36,7 +36,7 @@ with:
 
 Replace all releases:
 ```
-uses: cb80/pubrel@latest
+uses: cb80/pubrel@v0.1.0
 with:
   replace: true
   files: |
