@@ -1,5 +1,5 @@
-name: 'pubrel'
-description: 'Publish a release and upload assets'
+name: 'Publish a release and upload assets'
+description: 'This action can publish releases and upload assets. Existing releases can be replaced if you wish (delete & recreate). It supports GitHub Enterprise.'
 author: 'Chris Burkert (https://github.com/cb80)'
 inputs:
   ref:
