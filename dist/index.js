@@ -8,15 +8,15 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getTagFromRef = void 0;
-function getTagFromRef(argRef) {
+const getTagFromRef = function (argRef) {
     if (argRef === 'refs/heads/main') {
         return 'latest';
     }
     if (argRef.startsWith('refs/tags/')) {
-        return argRef.substring(10);
+        return argRef.slice(10);
     }
     throw new Error(`Invalid ref: ${argRef}`);
-}
+};
 exports.getTagFromRef = getTagFromRef;
 
 
@@ -55,14 +55,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const fs_1 = __importDefault(__nccwpck_require__(747));
+const getTagFromRef_1 = __nccwpck_require__(34);
 const core = __importStar(__nccwpck_require__(186));
 const github = __importStar(__nccwpck_require__(438));
-const getTagFromRef_1 = __nccwpck_require__(34);
-const fs_1 = __nccwpck_require__(747);
-const owner = github.context.repo.owner;
-const repo = github.context.repo.repo;
-function run() {
+const { owner } = github.context.repo;
+const { repo } = github.context.repo;
+const run = function () {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             core.info('Parsing the ref');
@@ -71,7 +74,8 @@ function run() {
             try {
                 tag = getTagFromRef_1.getTagFromRef(ref);
             }
-            catch (e) {
+            catch (ex) {
+                core.debug(ex.message);
                 core.info('Skipping publish');
                 return;
             }
@@ -84,8 +88,9 @@ function run() {
             try {
                 dat1 = yield octokit.rest.repos.getReleaseByTag({ owner, repo, tag });
             }
-            catch (ignore) {
-                // no release found is a good thing
+            catch (ex) {
+                // No release found is a good thing
+                core.debug(ex.message);
             }
             core.debug(dat1);
             if (dat1 !== undefined) {
@@ -113,17 +118,22 @@ function run() {
             });
             core.debug(rel2);
             const argFiles = core.getInput('files');
-            const files = argFiles.split('\n').filter(l => l.trim() !== '');
+            const files = argFiles.split('\n');
             core.info('Uploading files');
             for (const file of files) {
+                const name = file.split('/').pop();
                 core.info(`Uploading ${file}`);
                 const { data: resp } = yield octokit.repos.uploadReleaseAsset({
                     owner,
                     repo,
                     release_id: rel2.id,
                     url: rel2.upload_url,
-                    data: fs_1.readFileSync(file, 'utf8'),
-                    name: file
+                    data: fs_1.default.readFileSync(file),
+                    headers: {
+                        'content-type': 'application/octet-stream',
+                        'content-length': fs_1.default.statSync(file).size
+                    },
+                    name
                 });
                 core.debug(JSON.stringify(resp));
             }
@@ -136,11 +146,11 @@ function run() {
             });
             core.debug(rel3);
         }
-        catch (error) {
-            core.setFailed(error.message);
+        catch (ex) {
+            core.setFailed(ex.message);
         }
     });
-}
+};
 run();
 
 

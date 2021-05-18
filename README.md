@@ -7,7 +7,7 @@ replaced if you wish (delete & recreate). It supports GitHub Enterprise.
 
 # Examples
 ```
-uses: cb80/pubrel@v0.2.0
+uses: cb80/pubrel@latest
 with:
   files: |
     app.exe
@@ -16,7 +16,7 @@ with:
 
 Use a different token:
 ```
-uses: cb80/pubrel@v0.2.0
+uses: cb80/pubrel@latest
 with:
   token: ${{ secrets.MY_TOKEN }}
   files: |
@@ -26,7 +26,7 @@ with:
 
 Replace the `latest` release but not for other tags:
 ```
-uses: cb80/pubrel@v0.2.0
+uses: cb80/pubrel@latest
 with:
   replace: latest
   files: |
@@ -36,7 +36,7 @@ with:
 
 Replace all releases:
 ```
-uses: cb80/pubrel@v0.2.0
+uses: cb80/pubrel@latest
 with:
   replace: true
   files: |
@@ -46,13 +46,12 @@ with:
 
 # Inputs
 
-All options are ... well ... optional.
-| Option    | Default                | Description |
-|-----------|------------------------|-------------|
-| `ref`     | `github.ref`           | The GitHub ref related to this release. |
-| `token`   | `secrets.GITHUB_TOKEN` | The token for authentication and authorization. |
-| `replace` | `false`                | Shall we delete an existing release?<br>You can also set this to a specific tag name if you don't want to replace any release. |
-| `files`   | no files               | The list of files to be uploaded to the release. |
+| Option    | Use       | Default                | Description |
+|-----------|-----------|------------------------|-------------|
+| `ref`     | optional  | `github.ref`           | The GitHub ref related to this release. |
+| `token`   | optional  | `secrets.GITHUB_TOKEN` | The token for authentication and authorization. |
+| `replace` | optional  | `false`                | Shall we delete an existing release?<br>You can also set this to a specific tag name if you don't want to replace any release. |
+| `files`   | optional  | no files               | The list of files to be uploaded to the release. |
 
 # Credits
 
