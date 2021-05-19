@@ -12,6 +12,33 @@ jobs:
     - uses: actions/checkout@v2
     - run: npm install
     - run: npm run all
+
+    # real life test
+    - run: git tag -f ghatest
+    - run: git push -f origin ghatest
+    - name: create test release
+      uses: ./
+      with:
+        ref: 'refs/tags/ghatest'
+        replace: ghatest
+        files: |
+          README.md
+          .git/index
+    - name: download assets
+      uses: cb80/dlassets@latest
+      with:
+        tag: ghatest
+        to: dl
+    - run: ls -al dl/
+    - run: cmp README.md dl/README.md
+    - run: cmp .git/index dl/index
+    - name: remove test release
+      uses: cb80/delrel@latest
+      with:
+        tag: ghatest
+    - run: git push origin :ghatest
+
+    # publish on success
     - name: Update latest tag when pushing to main
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
       run: |
@@ -22,25 +49,3 @@ jobs:
       uses: ./
       with:
         replace: latest
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - run: git tag -f ghatest
-    - run: git push -f origin ghatest
-    - name: generate a test release
-      uses: ./
-      with:
-        ref: 'refs/tags/ghatest'
-        replace: ghatest
-        files: |
-          README.md
-          src/main.ts
-    - name: remove it again
-      uses: dev-drprasad/delete-tag-and-release@v0.2.0
-      with:
-        tag_name: ghatest
-        delete_release: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

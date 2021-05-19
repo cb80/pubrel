@@ -1,9 +1,9 @@
-export function getTagFromRef(argRef: string): string {
+export const getTagFromRef = function (argRef: string): string {
   if (argRef === 'refs/heads/main') {
-    return 'latest'
+    return 'latest';
   }
   if (argRef.startsWith('refs/tags/')) {
-    return argRef.substring(10)
+    return argRef.slice(10);
   }
-  throw new Error(`Invalid ref: ${argRef}`)
-}
+  throw new Error(`Invalid ref: ${argRef}`);
+};
