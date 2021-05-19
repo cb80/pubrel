@@ -68,7 +68,10 @@ const run = async function (): Promise<void> {
     core.debug(rel2);
 
     const argFiles: string = core.getInput('files');
-    const files: string[] = argFiles.split('\n');
+    const files: string[] = argFiles
+      .split('\n')
+      .map((line): string => line.trim())
+      .filter((line): boolean => line.length > 0);
 
     core.info('Uploading files');
     for (const file of files) {

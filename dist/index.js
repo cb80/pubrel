@@ -118,7 +118,10 @@ const run = function () {
             });
             core.debug(rel2);
             const argFiles = core.getInput('files');
-            const files = argFiles.split('\n');
+            const files = argFiles
+                .split('\n')
+                .map((line) => line.trim())
+                .filter((line) => line.length > 0);
             core.info('Uploading files');
             for (const file of files) {
                 const name = file.split('/').pop();
