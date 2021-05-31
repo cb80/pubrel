@@ -1,4 +1,5 @@
 ![CI/CD](https://github.com/cb80/pubrel/workflows/CI/CD/badge.svg)
+[![](https://img.shields.io/badge/GitHub-Marketplace-blue)](https://github.com/marketplace/actions/publish-a-release-and-upload-assets)
 
 # Description
 
