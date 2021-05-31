@@ -35,7 +35,7 @@ const run = async function (): Promise<void> {
       core.debug(ex.message);
     }
 
-    core.debug(dat1);
+    core.debug(JSON.stringify(dat1));
 
     if (dat1 !== undefined) {
       const replace: string = core.getInput('replace');
@@ -65,7 +65,7 @@ const run = async function (): Promise<void> {
       draft: true
     });
 
-    core.debug(rel2);
+    core.debug(JSON.stringify(rel2));
 
     const argFiles: string = core.getInput('files');
     const files: string[] = argFiles
@@ -78,7 +78,7 @@ const run = async function (): Promise<void> {
       const name = file.split('/').pop();
 
       core.info(`Uploading ${file}`);
-      const { data: resp } = await octokit.repos.uploadReleaseAsset({
+      const { data: resp } = await octokit.rest.repos.uploadReleaseAsset({
         owner,
         repo,
         release_id: rel2.id,
@@ -102,7 +102,7 @@ const run = async function (): Promise<void> {
       draft: false
     });
 
-    core.debug(rel3);
+    core.debug(JSON.stringify(rel3));
   } catch (ex: any) {
     core.setFailed(ex.message);
   }
