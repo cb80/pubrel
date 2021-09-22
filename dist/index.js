@@ -96,7 +96,7 @@ const run = function () {
             if (dat1 !== undefined) {
                 const replace = core.getInput('replace');
                 if (replace === 'true' || replace === tag) {
-                    core.info('Deleting release');
+                    core.info(`Deleting release id ${dat1.data.id}`);
                     const { data: resp } = yield octokit.rest.repos.deleteRelease({
                         owner,
                         repo,

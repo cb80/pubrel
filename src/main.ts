@@ -41,7 +41,7 @@ const run = async function (): Promise<void> {
       const replace: string = core.getInput('replace');
 
       if (replace === 'true' || replace === tag) {
-        core.info('Deleting release');
+        core.info(`Deleting release id ${dat1.data.id}`);
         const { data: resp } = await octokit.rest.repos.deleteRelease({
           owner,
           repo,
