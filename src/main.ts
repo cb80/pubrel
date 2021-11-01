@@ -75,7 +75,7 @@ const run = async function (): Promise<void> {
 
     core.info('Uploading files');
     for (const file of files) {
-      const name = file.split('/').pop();
+      const name = file.split('/').pop()!;
 
       core.info(`Uploading ${file}`);
       const { data: resp } = await octokit.rest.repos.uploadReleaseAsset({
