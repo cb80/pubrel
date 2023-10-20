@@ -6,17 +6,11 @@
     "@typescript-eslint/naming-convention": [
       "error",
       {
-        "selector": [ "variableLike", "memberLike" ],
+        "selector": [ "variableLike", "memberLike", "property" ],
         "format": [ "strictCamelCase", "StrictPascalCase" ],
-        "filter": { "regex": "^release_id|tag_name$", "match": false }
+        "filter": { "regex": "^release_id|tag_name|content-type|content-length$", "match": false }
       }
     ],
-    "@typescript-eslint/no-floating-promises": "off",
-    "@typescript-eslint/no-implicit-any-catch": [
-      "error",
-      {
-        "allowExplicitAny": true
-      }
-    ]
+    "@typescript-eslint/no-floating-promises": "off"
   }
 }
