@@ -19,7 +19,7 @@ inputs:
     required: false
     default: ''
 runs:
-  using: 'node18'
+  using: 'node20'
   main: 'dist/index.js'
 branding:
   icon: 'box'

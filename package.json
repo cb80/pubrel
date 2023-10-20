@@ -1,7 +1,7 @@
 {
   "name": "pubrel",
   "description": "Publish releases and upload assets. Existing releases can be replaced (delete & recreate). It supports GitHub Enterprise.",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "author": "Chris Burkert (https://github.com/cb80)",
   "license": "MIT",
   "main": "lib/main.js",
